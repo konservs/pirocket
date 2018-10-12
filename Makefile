@@ -1,22 +1,30 @@
 TARGET = pirocket
-CC = gcc
+#CC = gcc
+CC = g++
 FLAGS = -Iinc -Wall -lm
 ODIR = obj
 SDIR = src
-_OBJS = main.o smbus.o
-OBJS = $(patsubst %,$(ODIR)/%,$(_OBJS))
+
+_OBJSC = main.o smbus.o
+_OBJSX = altimeter.o
+
+OBJSC = $(patsubst %,$(ODIR)/%,$(_OBJSC))
+OBJSX = $(patsubst %,$(ODIR)/%,$(_OBJSX))
+
 
 .PHONY: all clean
-
 
 	
 all: $(TARGET)
 	
 clean:
-	rm -rf $(TARGET) $(OBJS)
+	rm -rf $(TARGET) $(OBJSC) $(OBJSX)
 
 $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) $(FLAGS) -o $@ -c $<
 
-$(TARGET): $(OBJS)
+$(ODIR)/%.o: $(SDIR)/%.cpp
+	$(CC) $(FLAGS) -o $@ -c $<
+
+$(TARGET): $(OBJSC) $(OBJSX)
 	$(CC) $(FLAGS) -o $(TARGET) $^
